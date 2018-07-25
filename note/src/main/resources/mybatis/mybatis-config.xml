@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+<!-- 简化类型名称 -->
+<typeAliases>
+     <!-- 工具类起别名 -->
+     <typeAlias type="java.util.Map" alias="Map"/>  
+      <typeAlias type="java.util.List" alias="List"/>
+       <typeAlias type="java.lang.String" alias="String"/>
+      <!-- <typeAlias type="me.gacl.domain.User" alias="_User"/>  把实体类 起别名-->
+      
+       <package name="com.noteApp.domain.model" />  <!-- 把这个包下的所有类都简化名称，别名就是类名  -->
+</typeAliases>
+
+
+
+
+</configuration>

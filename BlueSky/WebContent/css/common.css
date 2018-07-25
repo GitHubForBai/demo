@@ -1,0 +1,144 @@
+/*�ｽｹ�ｽｫ�ｽｹ�ｽｲ�ｽｲ�ｽｿ�ｽｷ�ｾ�(�ｾ奇ｾ暦ｾ抵ｽｳ)�ｾ托ｿｽ�ｾ奇ｽｽ*/
+
+/*id�ｾ托ｿｽ�ｾ奇ｽｽ*/
+#head_div{
+	position:absolute;
+	background-color: #EEEEEE;
+	top:1px;
+	left:2px;
+	width:1362px;
+	height:70px;	
+}
+
+#common_div1{
+	position:absolute;
+	top:75px;
+	width:1360px;
+	height:36px;
+	background-color:#2C7199;
+	left: 2px;
+}
+
+#common.table{
+	width:900px;
+	height:36px;
+	border:0px;
+	cellspacing:0;
+	cellpadding:0;
+}
+
+#div_icon{
+	position:absolute;
+	left:150px;
+	top:0px;
+	width:200px;
+	height:40px;
+}
+
+#div_login{
+	position: absolute;
+	left:980px;
+	top:4px;
+	width:256px;
+	height: 40px;	
+}
+#div_logined{
+	position: absolute;
+	left:980px;
+	top:4px;
+	width:256px;
+	height: 40px;	
+}
+
+#homepage_left_menu{
+	position:absolute;
+	top:115px;
+	left:30px;
+	width:290px;
+	height:510px;
+	border: solid 1px #DDDDDD;
+}
+
+#left_button_name{
+    position:absolute;
+    top:115px;
+	left:30px;
+	width:290px;
+	height:510px;
+	z-index:99999;
+}
+
+#left_table{
+	position: absolute;
+	top:3px;
+	left:11px;
+	width:270px;
+	height:490px;
+}
+
+#button_01{
+		position:absolute;
+		top:7%;
+		left:129px;
+		color:#ffffff;
+}
+#button_02{
+		position:absolute;
+		top:27%;
+		left:129px;
+		color:#ffffff;
+}
+#button_03{
+		position:absolute;
+		top:48%;
+		left:129px;
+		color:#ffffff;
+}
+#button_04{
+		position:absolute;
+		top:68%;
+		left:129px;
+		color:#ffffff;
+}
+#button_05{
+		position:absolute;
+		top:88%;
+		left:129px;
+		color:#ffffff;
+}
+
+#right_div{
+    position: absolute;
+    top:115px;
+	left:990px;
+	width:290px;
+	height:510px;
+	border: solid 1px #DDDDDD;	
+	
+}
+
+#everyday_news{
+	text-align: center;
+}
+
+#news_title{
+	position: absolute;
+	top:51px;
+	left:21px;
+	width:249px;
+	height:450px;
+}
+	
+	
+
+
+/*class�ｾ托ｿｽ�ｾ奇ｽｽ*/
+.word_css{
+	color:#FFFFFF;
+	font-size:20px;	
+}
+
+.head_menu{
+	cursor: pointer;	
+    text-decoration: none; 
+}

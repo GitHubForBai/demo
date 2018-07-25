@@ -1,0 +1,25 @@
+1.  Dao层只负责数据连接,Service层负责业务验证. < --  每层都有一个接口,Service层
+         还有一个实现类,实现层中接口的所有抽象方法.
+    Controller -- > 调Service层的接口实现类 -- >..
+    Service调Dao接口中的抽象方法
+    Dao接口中的抽象方法与mapper.xml一一对应 
+    
+2.    //jstl的命令前提---还需要导包
+    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+    //el表达式不需要引包和命令
+ 
+3.多用jQuery 方便 
+    想用jQuery,需要
+    <!-- 引入jQuery -->
+  <script type="text/javascript" src="js/jquery-1.11.1.js"></script>
+
+4.    //postgres#jdbc
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+ 		<property name="DriverClassName" value="org.postgresql.Driver"/>
+        <property name="url" value="jdbc:postgresql://localhost:5432/postgres_BGQ_Test"/>
+        <property name="username" value="postgres"/>
+        <property name="password" value="postgres"/>
+     </bean>  
+
+5.   用log4j.properties 查看运行信息
+6.学号是主键,不能重复    

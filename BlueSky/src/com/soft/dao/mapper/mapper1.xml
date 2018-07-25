@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+
+    <mapper namespace="com.soft.dao.Dao">    
+    
+   <!-- 查询这个用户登录时的用户名密码是否存在 --> 
+   <select id="SelectOneUser" parameterType="Map" resultType="LoginForm">
+   select 
+        username,
+        password 
+   from 
+        system_users 
+   where 
+        username=#{username} 
+   and  password=#{password}
+   </select>
+  
+  <!-- 注册新用户 -->
+  <insert id="InsertOneUser" parameterType="RegistryOneCount">
+  insert into system_users 
+  (
+  username,
+  password,
+  college_name,
+  real_name,
+  stu_id,
+  sex,
+  nation,
+  start_time,
+  qq_num
+  )
+  values
+  (
+  #{username},
+  #{password},
+  #{college_name},
+  #{real_name},
+  #{stu_id},
+  #{sex},
+  #{nation},
+  #{start_time},
+  #{qq_num}
+  )
+  </insert>
+  
+  <!-- 根据当前已经登录的用户的登录名,来查询这个用户的所有信息 -->
+  <select id="selectOneMess" parameterType="String" resultType="system_users">
+  <!-- 尽量避免用  *       全查  也 全写 -->
+  select * from system_users where username=#{username}
+  </select>
+  
+  <!-- 在注册账户时,根据一个用户名去查询 这个用户名是否已经存在 -->
+  <select id="selectOneUsername" parameterType="String" resultType="Map">
+  select 
+       stu_id 
+  from 
+       system_users
+  where 
+       username=#{username}
+  </select>
+ <!-- 
+    <insert id="addBook" parameterType="Map">
+   INSERT INTO books (ID,bookname,uptime,demo,author) VALUES (books_seq.nextval,#{bookname},SYSDATE,#{demo},#{author})
+    </insert>
+
+
+    <select id="SelectAllBooks" resultType="com.soft.pojo.Books"> 
+   select id, bookname,author,to_char(uptime,'yyyy-MM-dd')  uptime,demo from books
+    </select>
+
+
+      <delete id="delBooks" parameterType="Map">           
+      delete books where bookname in(-1
+      <if test="id != null">,
+               <foreach collection="id" item="ss" separator=",">
+                  #{ss}
+               </foreach>
+               </if>
+               )   
+       </delete>
+        -->
+     
+ </mapper> 

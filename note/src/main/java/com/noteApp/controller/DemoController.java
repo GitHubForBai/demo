@@ -1,6 +1,7 @@
-package com.bdyh.perfectContractManageSystem.api.controller;
+package com.pkulaw.magicweapon.controller.fabao;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,7 +23,7 @@ public class DemoController {
     @Autowired
     WebApplicationContext applicationContext;
 
-    @RequestMapping(value = "v1/getAllUrl", method = RequestMethod.POST)
+    @RequestMapping(value = "v1/getAllUrl", method = RequestMethod.GET)
     public Object getAllUrl() {
         RequestMappingHandlerMapping mapping = applicationContext.getBean(RequestMappingHandlerMapping.class);
         // 获取url与类和方法的对应信息
@@ -56,10 +57,30 @@ public class DemoController {
                 map1.put("type", requestMethod.toString());
             }
 
+            getParameters(method, map1);
+
             list.add(map1);
         }
 
         return list;
+    }
+
+    private void getParameters(HandlerMethod method, Map map1) {
+        StringBuilder builder = new StringBuilder();
+        StringBuilder builder1 = new StringBuilder();
+
+
+        MethodParameter[] methodParameters = method.getMethodParameters();
+        for (MethodParameter parameter : methodParameters) {
+            builder1.append(parameter.getParameter().getName());
+            builder.append(parameter.getParameter().getType().getName());
+
+            builder1.append(", ");
+            builder.append(", ");
+        }
+
+        map1.put("parameterType", builder.toString());
+        map1.put("parameterDeclaredName", builder1);
     }
 
 }

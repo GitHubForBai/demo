@@ -1,0 +1,1163 @@
+<header class="topbar">
+  <button class="menu-btn" id="menuBtn" aria-label="打开目录">☰</button>
+  <div class="brand">
+    <div class="brand-seal">汉</div>
+    <div>汉语助教 HanAssist <small>国际中文教学 AI 工作台 · 产品与技术方案 v0.1</small></div>
+  </div>
+  <div class="spacer"></div>
+  <div class="meta">面向：创始团队 / 技术负责人 / 种子教师 · 2026.11</div>
+</header>
+
+<nav class="sidebar" id="sidebar">
+  <div class="group">结论</div>
+  <a href="#summary"><span class="num">0</span>结论先行</a>
+  <a href="#users"><span class="num">1</span>用户与场景</a>
+  <div class="group">逐条回答</div>
+  <a href="#pains"><span class="num">2</span>13 个痛点逐条拆解</a>
+  <a href="#pron"><span class="num">3</span>专题：中文纠音</a>
+  <a href="#leveling"><span class="num">4</span>专题：权威分级与课件流水线</a>
+  <div class="group">产品</div>
+  <a href="#prototype"><span class="num">5</span>界面原型（可交互）</a>
+  <a href="#journey"><span class="num">6</span>端到端串联</a>
+  <div class="group">实现</div>
+  <a href="#arch"><span class="num">7</span>技术架构</a>
+  <a href="#data"><span class="num">8</span>数据、接口与模型策略</a>
+  <a href="#roadmap"><span class="num">9</span>POC → 上市路线</a>
+  <div class="group">市场</div>
+  <a href="#biz"><span class="num">10</span>商业化与竞争</a>
+  <a href="#risks"><span class="num">11</span>风险、合规与不做清单</a>
+  <a href="#appendix"><span class="num">12</span>附录</a>
+</nav>
+
+<main>
+
+<!-- ============ 0 SUMMARY ============ -->
+<section class="block" id="summary">
+  <div class="hero">
+    <span class="chip">国际中文教育 · 中国教师教外国学生</span>
+    <h1>先帮老师把课备好、上好，再把学生的“音”和“字”练对</h1>
+    <p>这份文档逐条回应了你们收集到的 13 个痛点和“中文纠音”难题。结论是：<b>痛点基本都是真的，但有几条的解法需要换方向</b>——不要先训练大模型，不要在 PPT 里做游戏，不要让大模型直接当声调裁判，也不要宣称 AI 评级等同 HSK。真正的护城河是三样东西：<b>权威分级引擎、汉字与语音两个专项引擎、教师使用数据形成的记忆</b>。</p>
+    <div class="chips">
+      <span class="chip">教师端优先（付费方 & 决策者）</span>
+      <span class="chip">分级引擎是地基</span>
+      <span class="chip">纠音 = 声学测量 + 大模型讲解</span>
+      <span class="chip">汉字是差异化切口</span>
+      <span class="chip">课件输出可编辑 PPTX + H5 互动</span>
+    </div>
+  </div>
+
+  <div class="grid g2" style="margin-top:18px">
+    <div class="card">
+      <h3>六个关键判断</h3>
+      <div class="verdicts">
+        <div class="verdict"><div class="idx">1</div><div><h3>“两个大模型”应改为“一个底座 + 三个专项引擎”</h3><p class="small muted">通用大模型（API 调用，多模型路由）负责写和讲；分级引擎、语音评测引擎、汉字引擎负责“判”。判对错的事交给确定性程序和专用声学模型，不交给大模型凭感觉。</p></div></div>
+        <div class="verdict"><div class="idx">2</div><div><h3>先做教师端，学生端作为作业的延伸</h3><p class="small muted">教师是付费方、是课堂入口，也最能感知“省了多少时间”。学生端第一版只承载老师布置的作业：跟读纠音、写字、复习、小测。</p></div></div>
+        <div class="verdict"><div class="idx">3</div><div><h3>纠音不是“没人做出来”，而是“没人做到能教”</h3><p class="small muted">讯飞、腾讯云等都有商用汉语评测接口。缺的是面向外国学习者的诊断、可视化和练习闭环。这正是我们能切入的位置。</p></div></div>
+        <div class="verdict"><div class="idx">4</div><div><h3>“权威分级”以《国际中文教育中文水平等级标准》为主轴</h3><p class="small muted">GF 0025-2021，三等九级，按音节、汉字、词汇、语法四个维度量化。HSK、YCT、BCT、CEFR 做映射，映射关系标注为“近似”。</p></div></div>
+        <div class="verdict"><div class="idx">5</div><div><h3>资源“聚合”只做索引和授权共享，不搬运</h3><p class="small muted">教材课文、出版社课件和 HSK 真题都有版权。我们做元数据索引、教师私有库、自愿共享社区，以及平台自产的原子资源。</p></div></div>
+        <div class="verdict"><div class="idx">6</div><div><h3>“自进化”要可见、可改、可撤回</h3><p class="small muted">记忆中心让老师看到系统记住了什么、从哪来，并可以修改或删除。平台层的进化是离线更新模板和策略，经过评测回归后再上线，不在线改模型权重。</p></div></div>
+      </div>
+    </div>
+    <div class="stack">
+      <div class="card">
+        <h3>第一期（POC）只做这一条主线</h3>
+        <div class="flow">
+          <div class="step"><span class="n">1</span><b>选教材单元</b>系统读取班级画像与教师记忆</div>
+          <div class="step det"><span class="n">2</span><b>生成课件</b>分级审校，零超纲</div>
+          <div class="step"><span class="n">3</span><b>课堂授课</b>PPTX + 互动游戏</div>
+          <div class="step"><span class="n">4</span><b>一键作业</b>跟读、写字、复习</div>
+          <div class="step det"><span class="n">5</span><b>学情报告</b>声调和笔顺错误统计</div>
+          <div class="step human"><span class="n">6</span><b>回流</b>下次备课自动补弱项</div>
+        </div>
+        <p class="small muted">13 个痛点中，1、4、5、6、9、10、11、12、13 在这条主线上都会被触及；2、3、7、8 进入第二阶段。</p>
+      </div>
+      <div class="card">
+        <h3>POC 成功的判定标准</h3>
+        <div class="grid g2" style="gap:12px">
+          <div><div class="kpi">≥ 60%</div><div class="kpi-label">生成课件“改动不超过 20% 即可上课”的比例</div></div>
+          <div><div class="kpi">&lt; 2%</div><div class="kpi-label">课件正文超纲词比例（白名单术语除外）</div></div>
+          <div><div class="kpi">≥ 85%</div><div class="kpi-label">单字/双字声调判定与资深教师多数意见一致</div></div>
+          <div><div class="kpi">≤ 8%</div><div class="kpi-label">纠音误报率（读对了却被判错）</div></div>
+          <div><div class="kpi">≥ 40%</div><div class="kpi-label">种子教师连续 4 周每周使用</div></div>
+          <div><div class="kpi">≥ 50%</div><div class="kpi-label">学生作业完成率（老师布置后）</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 1 USERS ============ -->
+<section class="block" id="users">
+  <div class="eyebrow">01 · 用户与场景</div>
+  <h2>谁在用、谁付钱、在哪用</h2>
+  <p class="lead">对外汉语（国际中文教育）的教学场景高度分散，一套产品不能平均用力。按“付费意愿 × 痛点强度 × 可触达性”排序，第一批锁定前两类教师。</p>
+  <div class="grid g4" style="margin-top:14px">
+    <div class="card"><span class="chip red">第一优先</span><h3 style="margin-top:8px">国内高校留学生教师</h3><p class="small">综合课、口语课为主，班级多国别混合，HSK 2–5 级。备课量大，课件要求规范。</p><p class="small muted">核心诉求：备课省时、课件分级准确、发音作业可检查。</p></div>
+    <div class="card"><span class="chip red">第一优先</span><h3 style="margin-top:8px">海外中文教师</h3><p class="small">孔院、中文学校、国际学校、当地中小学。学生多为同一国别的零基础到初级学生，少儿比例高。</p><p class="small muted">核心诉求：游戏化、国别化、少儿适配，以及能离线使用的 PPT。</p></div>
+    <div class="card"><span class="chip gold">第二阶段</span><h3 style="margin-top:8px">职业汉语教师</h3><p class="small">职业院校、“中文 + 职业技能”项目、出海企业的员工培训。行业词汇和场景是刚需。</p><p class="small muted">核心诉求：行业包，以及专业术语和安全用语的准确性。</p></div>
+    <div class="card"><span class="chip">长期</span><h3 style="margin-top:8px">自由职业 / 线上私教</h3><p class="small">一对一线上教学，成人学员为主。对工具价格敏感，但传播性强。</p><p class="small muted">核心诉求：快速出材料、学员进度管理、口语纠音。</p></div>
+  </div>
+  <div class="grid g2" style="margin-top:16px">
+    <div class="card">
+      <h3>教师一天的真实时间分配（访谈要验证的假设）</h3>
+      <table class="t" style="margin-top:6px">
+        <tr><th>环节</th><th>痛点</th><th>我们怎么省时间</th></tr>
+        <tr><td>备课</td><td>找资料、做 PPT、注拼音、控制生词难度</td><td>选单元一键生成，分级引擎自动控制难度</td></tr>
+        <tr><td>上课</td><td>调动气氛、点名、操练</td><td>课堂游戏大屏和随机点名</td></tr>
+        <tr><td>作业</td><td>口语作业只能听录音逐个批改</td><td>AI 先筛一遍，老师只看被标红的部分</td></tr>
+        <tr><td>评价</td><td>期中期末写评语、出报告</td><td>按四项技能自动汇总，生成可修改的评语</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h3>学生画像决定内容形态</h3>
+      <table class="t" style="margin-top:6px">
+        <tr><th>学生</th><th>主要困难</th><th>产品侧重</th></tr>
+        <tr><td>欧美成人</td><td>声调、汉字记忆</td><td>纠音可视化、部件拆解记字</td></tr>
+        <tr><td>日韩学生</td><td>汉字有基础，发音迁移（如 zh/z、f/p、送气音）</td><td>声母韵母对比练习、繁简与日汉字差异</td></tr>
+        <tr><td>东南亚学生</td><td>母语有声调但调型不同，送气音</td><td>调型对比，国别化场景</td></tr>
+        <tr><td>少儿（YCT）</td><td>注意力短，书写习惯需要建立</td><td>游戏、描红、短任务</td></tr>
+        <tr><td>职业学员</td><td>时间少，目标明确</td><td>行业场景对话、术语卡片</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2 PAINS ============ -->
+<section class="block" id="pains">
+  <div class="eyebrow">02 · 逐条拆解</div>
+  <h2>13 个痛点：判断、方案、技术、界面</h2>
+  <p class="lead">每一条先给判断（是否真痛点、原话里哪里需要修正），再给方案和实现。卡片底部可展开技术细节。</p>
+
+  <div class="table-wrap" style="margin:14px 0 18px">
+    <table class="t">
+      <tr><th>#</th><th>原始痛点</th><th>判断</th><th>优先级</th><th>落在哪个模块</th></tr>
+      <tr><td>1</td><td>课件新旧参差，难匹配</td><td><span class="chip jade">真痛点</span> 根因是缺少元数据</td><td>P0</td><td>分级引擎 + 资源打标</td></tr>
+      <tr><td>2</td><td>资源散，需要聚合搜索库</td><td><span class="chip gold">换做法</span> 只做索引和授权共享</td><td>P1</td><td>资源库</td></tr>
+      <tr><td>3</td><td>教材脱节、不全面</td><td><span class="chip gold">换做法</span> 做教材补丁，不重编教材</td><td>P1</td><td>课件生成（补充材料）</td></tr>
+      <tr><td>4</td><td>训练对外汉语大模型</td><td><span class="chip gold">换做法</span> 先 RAG + 工具，后微调</td><td>P0（不训练）</td><td>模型网关 + 编排</td></tr>
+      <tr><td>5</td><td>记忆与自进化</td><td><span class="chip jade">真痛点</span> 要做成可见、可控</td><td>P0 基础版</td><td>记忆中心</td></tr>
+      <tr><td>6</td><td>汉字类智能体少</td><td><span class="chip jade">真空白</span> 差异化切口</td><td>P0</td><td>汉字引擎</td></tr>
+      <tr><td>7</td><td>职业汉语资源匮乏</td><td><span class="chip jade">真痛点</span> B 端付费机会</td><td>P2</td><td>行业包</td></tr>
+      <tr><td>8</td><td>AI 听说读写评级</td><td><span class="chip gold">需限定</span> 只做形成性评价</td><td>P1</td><td>测评中心</td></tr>
+      <tr><td>9</td><td>笔顺练习兼顾左撇子</td><td><span class="chip jade">真需求</span> 规范笔顺不变，界面与容差适配</td><td>P0</td><td>汉字引擎</td></tr>
+      <tr><td>10</td><td>PPT 课件智能生成</td><td><span class="chip jade">最高频</span> 关键是“可编辑可直接上课”</td><td>P0</td><td>课件生成</td></tr>
+      <tr><td>11</td><td>汉语游戏</td><td><span class="chip gold">换载体</span> 用 H5 而不是 PPT</td><td>P0（1 款）</td><td>课堂互动</td></tr>
+      <tr><td>12</td><td>课件智能体拆分（权威分级）</td><td><span class="chip red">地基</span> 分级判定必须是确定性程序</td><td>P0</td><td>分级引擎 + 流水线</td></tr>
+      <tr><td>13</td><td>智能体辅助测评、学习、考试</td><td><span class="chip jade">真需求</span> 与第 8 条合并成学习闭环</td><td>P0 作业 / P1 考试</td><td>作业与复习</td></tr>
+    </table>
+  </div>
+
+  <div class="stack" style="gap:14px">
+
+    <!-- 1 -->
+    <article class="card pain">
+      <div class="pain-head"><div class="pain-no">01</div><div>
+        <h3>课件新旧参差不齐，真正匹配师生的不好找</h3>
+        <div class="pain-tags"><span class="chip jade">真痛点</span><span class="chip">P0</span><span class="chip blue">分级引擎 · 资源打标</span></div>
+      </div></div>
+      <div class="pain-body">
+        <h4>判断</h4>
+        <p>痛点成立，但根因不是“课件少”，而是<b>课件没有可计算的标签</b>：没人知道一份课件适合哪一级、对应哪本教材第几课、适合什么母语背景的学生、语料是不是已经过时。“匹配”本质上是“班级画像 × 资源标签”的排序问题，而不是关键词搜索问题。</p>
+        <h4>方案</h4>
+        <ul>
+          <li><b>五维标签</b>：等级（等级标准 1–9 级）、教材单元、课型（综合/口语/听力/读写/汉字/文化/职业）、学习者画像（年龄段、母语、学习目的）、时效性。</li>
+          <li><b>上传即打标</b>：抽取文字，计算词汇和汉字的等级分布，给出建议等级和超纲词清单；大模型判断课型和话题；用“过时情景词库 + 大模型”识别磁带、寄信、BP 机这类陈旧场景。</li>
+          <li><b>按班级推荐</b>：老师建班时填写一次班级画像，之后所有资源都按“与本班匹配度”排序。</li>
+        </ul>
+        <h4>界面要点</h4>
+        <p>资源卡片上直接显示：<span class="chip blue">等级 3 级</span> <span class="chip red">超纲词 4</span> <span class="chip">匹配本班 92%</span> <span class="chip gold">语料较旧</span></p>
+      </div>
+      <details><summary>技术实现</summary><div class="detail-body">
+        <ul>
+          <li>文档解析：PPTX 用 python-pptx，DOCX 和 PDF 用 Apache Tika / PyMuPDF，图片里的文字用 OCR（PaddleOCR）。</li>
+          <li>分词：jieba 或 HanLP，加载等级标准词表作为用户词典，保证词表里的词不被切碎。</li>
+          <li>等级计算：每个词和汉字查表得到等级，统计分布；文本等级取覆盖 95% 词次所需的最低等级（可调）。</li>
+          <li>排序：<code>score = 0.4·等级匹配 + 0.25·语义相似(pgvector) + 0.15·课型匹配 + 0.1·时效 + 0.1·质量信号(收藏/复用/评分)</code>，权重在 POC 阶段人工调，之后用点击数据学习。</li>
+        </ul>
+      </div></details>
+    </article>
+
+    <!-- 2 -->
+    <article class="card pain">
+      <div class="pain-head"><div class="pain-no">02</div><div>
+        <h3>资源很散，最好有聚合渠道和教学/学习资源搜索库</h3>
+        <div class="pain-tags"><span class="chip gold">换做法</span><span class="chip">P1</span><span class="chip blue">资源库</span></div>
+      </div></div>
+      <div class="pain-body">
+        <h4>判断</h4>
+        <p>需求真实，但“聚合”有版权陷阱：爬取并转存出版社配套课件、他人课件或 HSK 真题，会直接卡住上市。聚合要聚合的是<b>“可发现性”</b>，而不是文件本身。</p>
+        <h4>方案：四层资源库</h4>
+        <ol>
+          <li><b>公共索引层</b>：只存元数据和链接（例如国际中文智慧教育平台、出版社官网公开资源、公开视频），点击跳转到原站。</li>
+          <li><b>社区共享层</b>：教师自愿上传，上传时选择授权方式（如 CC BY-NC），平台审核后才公开。</li>
+          <li><b>私有知识库</b>：教师或机构自己的教案、旧课件、讲义，仅本人或本机构可见，作为课件生成的检索来源。</li>
+          <li><b>平台自产原子资源</b>：生词卡、例句、TTS 音频、笔顺动画、配图、练习题。这一层最可控、最容易组合，也是课件生成的主要“积木”。</li>
+        </ol>
+        <p>出版社合作放在第二阶段：先用工具价值获得教师规模，再以“带来用户”为筹码谈配套资源授权。</p>
+      </div>
+      <details><summary>技术实现</summary><div class="detail-body">
+        <ul>
+          <li>混合检索：BM25（中文分词，OpenSearch + IK，或 Postgres + zhparser）加向量检索（pgvector），再用重排模型（如 bge-reranker）排序。</li>
+          <li>三种检索入口：关键词搜索；“以课搜课”（选教材单元，返回相关资源）；“以词搜资源”（输入生词，返回含该词的例句、图片、游戏）。</li>
+          <li>每条资源记录授权字段 <code>license</code>、来源 <code>source_url</code>、可见范围 <code>visibility</code>，检索时按用户权限过滤。</li>
+        </ul>
+      </div></details>
+    </article>
+
+    <!-- 3 -->
+    <article class="card pain">
+      <div class="pain-head"><div class="pain-no">03</div><div>
+        <h3>教材比较脱节、不够全面</h3>
+        <div class="pain-tags"><span class="chip gold">换做法</span><span class="chip">P1</span><span class="chip blue">课件生成 · 补充材料</span></div>
+      </div></div>
+      <div class="pain-body">
+        <h4>判断</h4>
+        <p>有三种具体表现：<b>语料陈旧</b>（没有移动支付、外卖、高铁）、<b>国别化不足</b>（同一本书同时给泰国中学生和欧洲成人用）、<b>细分领域缺口</b>（少儿、职业）。但“我们自己编一套教材”是陷阱：教材要经过编审、出版和学校采购体系，周期和门槛都不是软件公司能控制的，老师也不会因为一个 App 换教材。</p>
+        <h4>方案：做教材的“补丁层”</h4>
+        <ul>
+          <li>以老师<b>正在用的教材单元</b>为锚点，生成三类补充：时效补充（同级的当代场景对话）、国别化补充（学生所在国的货币、地名、节日对比）、分层练习（同一课给快慢两组）。</li>
+          <li>所有补充材料都过分级引擎，保证不超出本课和已学范围。</li>
+          <li>教材正文受版权保护，平台只结构化“知识点清单”（词、语法点、话题），不复制课文。</li>
+        </ul>
+      </div>
+      <details><summary>技术实现</summary><div class="detail-body">
+        <p>建立 <code>textbook → unit → knowledge_point(word / char / grammar / topic)</code> 结构表。生成补充材料时，把“本课生词 + 已学生词（前序单元累积）+ 本课语法点”作为硬约束传给生成流程，分级引擎按“已学集合”而不只是“等级”做检查，这样生成的内容和老师的教学进度严丝合缝。</p>
+      </div></details>
+    </article>
+
+    <!-- 4 -->
+    <article class="card pain">
+      <div class="pain-head"><div class="pain-no">04</div><div>
+        <h3>训练对外汉语大模型，辅助课件制作、笔记、作业</h3>
+        <div class="pain-tags"><span class="chip gold">换做法</span><span class="chip">P0 不训练</span><span class="chip blue">模型网关 · 编排</span></div>
+      </div></div>
+      <div class="pain-body">
+        <h4>判断</h4>
+        <p>方向对，路径要调整。<b>POC 阶段不要训练或全参微调大模型。</b>当前通用大模型的中文写作能力已经足够，真正缺的是两样：<b>分级约束</b>（不超纲）和<b>教学法格式</b>（课型结构、练习形式）。这两样用“检索增强 + 确定性工具 + 结构化输出”就能解决，成本低、迭代快、可解释。</p>
+        <h4>方案</h4>
+        <ul>
+          <li><b>底座</b>：多模型路由。面向国内用户走已备案的国产模型 API（如通义千问、DeepSeek、智谱 GLM、豆包等）；海外机构可选国际模型；私有化客户部署开源模型（如 Qwen 系列）加 vLLM。</li>
+          <li><b>知识</b>：等级标准词表、汉字表、语法点，加上教材知识点和教师私有库，通过检索注入。</li>
+          <li><b>约束</b>：分级引擎作为工具，形成“生成 → 检查 → 只改超纲处 → 再检查”的循环。</li>
+          <li><b>格式</b>：课型模板（如 PPP 讲练、任务型教学）写进提示词和 JSON Schema，输出结构化课件，而不是一段长文本。</li>
+        </ul>
+        <div class="callout jade"><b>什么时候再微调？</b>积累到数千条“教师采纳或修改后”的高质量课件片段后，用 LoRA 微调中小模型来降低成本、统一风格；再往后用“教师选 A 不选 B”的偏好数据做 DPO。模型本身不是护城河，<b>分级引擎和教师行为数据才是</b>。</div>
+      </div>
+      <details><summary>技术实现</summary><div class="detail-body">
+        <ul>
+          <li>模型网关：统一接口，记录每次调用的模型、token、耗时、费用；按任务路由（长文本生成用强模型，打标和分类用便宜模型）；失败自动切换备用模型。</li>
+          <li>输出全部走 JSON Schema 校验，失败自动重试；课件中间表示见“数据、接口与模型策略”一节。</li>
+          <li>“笔记”和“作业”不另做模型：笔记是课件的学生版（隐藏答案、保留生词和语法），作业由课件知识点派生。</li>
+        </ul>
+      </div></details>
+    </article>
+
+    <!-- 5 -->
+    <article class="card pain">
+      <div class="pain-head"><div class="pain-no">05</div><div>
+        <h3>系统要支持记忆和自进化，记住教师的需求</h3>
+        <div class="pain-tags"><span class="chip jade">真痛点</span><span class="chip">P0 基础版</span><span class="chip blue">记忆中心</span></div>
+      </div></div>
+      <div class="pain-body">
+        <h4>判断</h4>
+        <p>这是留存的关键：第一次生成 70 分，第十次应该是 90 分。但“自进化”必须落到<b>可见、可改、可撤回</b>的机制上。老师不信任黑箱，尤其是它会影响给学生的内容。</p>
+        <h4>方案：三类记忆 + 两层进化</h4>
+        <ul>
+          <li><b>档案记忆</b>（老师显式填写）：任教机构、班级、教材与进度、学生母语与年龄、课件风格偏好、常用游戏、需要回避的内容。</li>
+          <li><b>情节记忆</b>（系统自动记录）：历史课件、上节课讲到哪、哪些词或声调全班错得多。</li>
+          <li><b>偏好记忆</b>（从行为中提取，经老师确认）：比如老师每次都把“练习”改成“小组活动”，系统弹出“要记住这个偏好吗？”，确认后才写入。</li>
+          <li><b>个人层进化</b>：记忆影响下一次生成。<b>平台层进化</b>：聚合匿名的编辑记录和采纳率，离线更新模板、提示词和排序策略，经评测集回归后上线。</li>
+        </ul>
+        <p>原型中的“记忆中心”可以体验：每条记忆都标注来源，可以停用或删除。</p>
+      </div>
+      <details><summary>技术实现</summary><div class="detail-body">
+        <ul>
+          <li>存储：结构化记忆放 Postgres（JSONB），课件片段向量放 pgvector。</li>
+          <li>提取：课件保存时计算“生成版 vs 教师版”的结构化差异，交给大模型抽取候选偏好，置信度低于阈值的丢弃，高于阈值的提示老师确认。</li>
+          <li>召回：按任务类型召回（生成课件只召回风格、班级、进度相关记忆），总长度设上限，避免提示词膨胀。</li>
+          <li>平台进化的门槛：任何模板或策略变更必须在离线评测集上不退化，才能灰度上线。</li>
+        </ul>
+      </div></details>
+    </article>
+
+    <!-- 6 -->
+    <article class="card pain">
+      <div class="pain-head"><div class="pain-no">06</div><div>
+        <h3>写作、对话智能体很多，汉字相关的很少（练写、手写/电写、笔顺）</h3>
+        <div class="pain-tags"><span class="chip jade">真空白</span><span class="chip">P0</span><span class="chip blue">汉字引擎</span></div>
+      </div></div>
+      <div class="pain-body">
+        <h4>判断</h4>
+        <p>这是最好的差异化切口之一。对话和写作类产品同质化严重，而汉字是外国学习者最大的劝退点。另外，汉字能力<b>可以被确定性地评判</b>（笔顺对不对、方向对不对），做出来的东西可靠、可信。</p>
+        <h4>方案：汉字四件套</h4>
+        <ol>
+          <li><b>笔顺</b>：规范笔顺动画、描红、默写，即时判定每一笔。</li>
+          <li><b>部件拆解与字族</b>：例如“清、情、晴、请、睛”，用部件和形声规律帮助记忆。</li>
+          <li><b>形近字辨析</b>：己/已/巳、未/末、人/入，自动生成辨析练习。</li>
+          <li><b>书写评测</b>：电写（触屏、手写笔）在 P0 阶段做；纸笔拍照评测放到 P2。</li>
+        </ol>
+        <p>原型中的“学生 · 写字”可以直接体验笔顺演示和描红判定。</p>
+      </div>
+      <details><summary>技术实现</summary><div class="detail-body">
+        <ul>
+          <li>笔画数据：开源的 Make Me a Hanzi（约 9000 字，含笔画轮廓和中线），渲染与描红判定用 Hanzi Writer（MIT 协议）。</li>
+          <li><b>必须校对</b>：开源数据与大陆《通用规范汉字笔顺规范》（GF 0023-2020）存在少量差异字，需要教研逐字核对并维护差异表。这件事本身也是壁垒。</li>
+          <li>部件数据：参考《现代常用字部件及部件名称规范》，结合开源 IDS 拆分数据（如 cjkvi-ids）。</li>
+          <li>书写评分：把用户笔迹重采样后与标准中线比较（起点、终点、方向、DTW 形状距离），再加结构比例（重心、部件占比）。</li>
+          <li>输入：Pointer Events 支持手指、手写笔和压感；手写笔模式下忽略手掌的大面积触点（防误触）。</li>
+        </ul>
+      </div></details>
+    </article>
+
+    <!-- 7 -->
+    <article class="card pain">
+      <div class="pain-head"><div class="pain-no">07</div><div>
+        <h3>职业汉语课本多，学习资源匮乏</h3>
+        <div class="pain-tags"><span class="chip jade">真痛点</span><span class="chip">P2</span><span class="chip blue">行业包</span></div>
+      </div></div>
+      <div class="pain-body">
+        <h4>判断</h4>
+        <p>痛点成立，而且有明确的付费方：职业院校、“中文 + 职业技能”项目、出海中资企业的本地员工培训。资源匮乏的根因是<b>“行业知识 + 汉语教学”的双重专业门槛</b>。AI 能把门槛降低，但不能消除，必须有行业专家审核，尤其是安全用语。</p>
+        <h4>方案：行业包</h4>
+        <ul>
+          <li>行业包内容：术语库（汉字、拼音、英文、当地语言、图片）、典型工作场景任务（如“设备交接班”“跨境电商客服回复”“酒店前台入住”）、安全用语（必须 100% 准确，人工逐条审核）。</li>
+          <li>生成场景对话时，行业术语进入白名单，可以超出等级，但必须加注释；其余语言仍受等级约束。</li>
+          <li>商业上一个行业一个行业打透，先选 1–2 个已有明确客户的行业，与院校或企业共建，老师和行业专家双审。</li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- 8 -->
+    <article class="card pain">
+      <div class="pain-head"><div class="pain-no">08</div><div>
+        <h3>AI 辅助学生评级（听说读写全方面评测）</h3>
+        <div class="pain-tags"><span class="chip gold">需限定</span><span class="chip">P1</span><span class="chip blue">测评中心</span></div>
+      </div></div>
+      <div class="pain-body">
+        <h4>判断</h4>
+        <p>需要区分两件事：<b>形成性评价</b>（日常练习、诊断、阶段报告），AI 可以做好；<b>高利害考试</b>（HSK 等），AI 不能替代，产品也不能宣称“等效 HSK 等级”，否则既有合规风险，也会在老师那里失去信任。对外表述用“等级估计（参考）”。</p>
+        <h4>方案</h4>
+        <ul>
+          <li><b>听、读</b>：题库加项目反应理论（IRT）标定难度，用计算机自适应测试（CAT）在 15–20 题内估计等级。</li>
+          <li><b>说</b>：语音评测（发音、声调、流利度）加大模型按等级标准中的交际能力描述打分。</li>
+          <li><b>写</b>：汉字书写评测，加作文的大模型评分，用锚定样文校准，输出等级和错误清单（错别字、语法、搭配）。</li>
+          <li><b>报告</b>：四项技能雷达图、等级估计和置信区间、下一步练习建议。老师可以改分，改分记录成为校准数据。</li>
+        </ul>
+        <div class="callout gold"><b>上线门槛</b>AI 评分与教师评分的一致性（二次加权 Kappa）≥ 0.7 才对学生展示分数；未达到前只给老师看。</div>
+      </div>
+    </article>
+
+    <!-- 9 -->
+    <article class="card pain">
+      <div class="pain-head"><div class="pain-no">09</div><div>
+        <h3>笔顺练习功能（兼顾左撇子情况）</h3>
+        <div class="pain-tags"><span class="chip jade">真需求</span><span class="chip">P0</span><span class="chip blue">汉字引擎</span></div>
+      </div></div>
+      <div class="pain-body">
+        <h4>判断与澄清</h4>
+        <p><b>规范笔顺不会因为左手书写而改变</b>，教学上仍然按规范教。左撇子真正的困难是：① 手会遮住刚写的笔画和放在左边的范字；② 写横画时是“推”而不是“拉”，起笔角度和力度不同；③ 在平板上手掌更容易误触。</p>
+        <h4>方案</h4>
+        <ul>
+          <li>学生档案中设置“书写手：左 / 右”。</li>
+          <li>左手模式：镜像布局（右手模式下范字和笔顺分解在书写格左侧，左手模式下移到右侧，都是为了不被书写的手遮挡）；提高方向容差（重点判起止点和走向，不苛求倾角）；启用手写笔优先的防误触；给出握笔和纸张倾斜建议。</li>
+          <li>教师端报告单独统计左手学生的错误类型，避免把“姿势问题”误判成“笔顺问题”。</li>
+        </ul>
+        <p>原型“学生 · 写字”右上角可以切换左右手模式。</p>
+      </div>
+    </article>
+
+    <!-- 10 -->
+    <article class="card pain">
+      <div class="pain-head"><div class="pain-no">10</div><div>
+        <h3>课件为 PPT（基于自己的知识库生成，也支持大模型辅助）</h3>
+        <div class="pain-tags"><span class="chip jade">最高频</span><span class="chip">P0</span><span class="chip blue">课件生成</span></div>
+      </div></div>
+      <div class="pain-body">
+        <h4>判断</h4>
+        <p>这是使用频率最高、付费意愿最强的功能。通用 AI PPT 工具已经很多，我们赢在<b>“生成后能不能直接上课、能不能方便地改”</b>，以及对外汉语专属的排版元素。</p>
+        <h4>方案</h4>
+        <ul>
+          <li>输出<b>真正可编辑的 .pptx</b>（文字是文字，不是图片），母版按对外汉语课型设计：组织教学 → 复习 → 生词 → 课文 → 语法 → 练习 → 游戏 → 小结与作业。</li>
+          <li>专属元素：汉字上方自动注拼音（可一键隐藏）、声调颜色、生词卡（字、拼音、词性、英释、例句、图）、笔顺动画、TTS 音频、游戏入口（二维码或链接）。</li>
+          <li>两种来源：<b>我的知识库</b>（上传的教案、旧课件，检索后生成）或<b>大模型直接生成</b>，也可以混合；两者都必须过分级引擎。</li>
+          <li>局部重生成：只重做某一页或某个练习；保留老师已改过的页面不被覆盖。</li>
+          <li>同时导出 <b>H5 授课模式</b>，承载 PPT 做不了的互动（游戏、实时作答）。</li>
+        </ul>
+      </div>
+      <details><summary>技术实现</summary><div class="detail-body">
+        <ul>
+          <li>中间表示：Lesson JSON（见第 8 节），先生成结构，再渲染成 PPTX 和 H5，两种输出保持一致。</li>
+          <li>渲染：服务端 python-pptx（或 Node 端 PptxGenJS）按母版填充；拼音用 pypinyin 加多音字词典和变调规则，渲染为文本框而非图片，保证可编辑。</li>
+          <li>预览：LibreOffice headless 把 PPTX 转成图片，供网页端预览。</li>
+          <li>WPS / Keynote 兼容：只用基础形状和文本框，不依赖宏和复杂动画。</li>
+        </ul>
+      </div></details>
+    </article>
+
+    <!-- 11 -->
+    <article class="card pain">
+      <div class="pain-head"><div class="pain-no">11</div><div>
+        <h3>增加汉语游戏（连连看、击鼓传花、钓鱼等，PPT 或其他形式）</h3>
+        <div class="pain-tags"><span class="chip gold">换载体</span><span class="chip">P0 一款 / P1 多款</span><span class="chip blue">课堂互动</span></div>
+      </div></div>
+      <div class="pain-body">
+        <h4>判断</h4>
+        <p>课堂刚需，尤其对少儿和初级班。但<b>“用 PPT 做游戏”是死路</b>：PPT 的宏和触发器很脆弱，换到 WPS、Keynote 或在线播放就容易坏，而且做不了计分、计时和全班参与。</p>
+        <h4>方案</h4>
+        <ul>
+          <li>一个 H5 游戏引擎加多个玩法模板，<b>内容自动取自本课词表</b>，老师零配置。</li>
+          <li>玩法：连连看（汉字 ↔ 拼音 ↔ 图片 ↔ 释义）、击鼓传花（随机点名 + 随机题）、钓鱼（点击或拖拽“鱼”上的词）、拼音转盘、听音找字、句子排序、你比划我猜。</li>
+          <li>入口：课件里的游戏页放链接和二维码，课堂大屏一键打开；P1 支持学生手机扫码加入、实时抢答。</li>
+          <li>保底：没有网络的教室可以导出简化版 PPT 游戏（翻牌、连线），只用最基础的超链接。</li>
+        </ul>
+        <p>原型“课堂游戏”可以体验连连看和击鼓传花。</p>
+      </div>
+    </article>
+
+    <!-- 12 -->
+    <article class="card pain">
+      <div class="pain-head"><div class="pain-no">12</div><div>
+        <h3>课件智能体拆分（要使用权威分级）★★★</h3>
+        <div class="pain-tags"><span class="chip red">地基</span><span class="chip">P0</span><span class="chip blue">分级引擎 · 课件流水线</span></div>
+      </div></div>
+      <div class="pain-body">
+        <h4>判断</h4>
+        <p>这是整个产品的地基，优先级最高。需要两个澄清：</p>
+        <ol>
+          <li><b>权威分级的主轴</b>是《国际中文教育中文水平等级标准》（GF 0025-2021）：三等九级，按音节、汉字、词汇、语法四个维度量化（音节 1110 个、汉字 3000 个、词汇 11092 个、语法点 572 个），并附有话题和任务描述。HSK（含按新标准改版的 HSK 3.0）、YCT（少儿）、BCT（商务）以及海外常用的 CEFR / ACTFL 做映射，映射关系一律标注“近似”。</li>
+          <li><b>“智能体拆分”不是拆得越多越好</b>。分级判定必须由确定性程序完成（分词、查表、语法点规则匹配），不能交给大模型“感觉一下难不难”。整体用编排好的工作流，只在需要创造性的节点使用大模型。</li>
+        </ol>
+        <p>完整方案见专题 <a href="#leveling">“权威分级与课件流水线”</a>，原型中有可交互的分级检查器。</p>
+      </div>
+    </article>
+
+    <!-- 13 -->
+    <article class="card pain">
+      <div class="pain-head"><div class="pain-no">13</div><div>
+        <h3>智能体辅助测评、学习、考试</h3>
+        <div class="pain-tags"><span class="chip jade">真需求</span><span class="chip">P0 作业 / P1 考试</span><span class="chip blue">作业与复习</span></div>
+      </div></div>
+      <div class="pain-body">
+        <h4>判断</h4>
+        <p>和第 8 条合并考虑。不建议一开始做“全能学习智能体”，学生不会自发打开一个空白聊天框学汉语。应该把它串成<b>以老师为起点的学习闭环</b>：</p>
+        <div class="flow">
+          <div class="step"><span class="n">1</span><b>课堂</b>教师课件</div>
+          <div class="step det"><span class="n">2</span><b>作业</b>由课件知识点自动生成</div>
+          <div class="step det"><span class="n">3</span><b>练习</b>间隔重复（FSRS）</div>
+          <div class="step det"><span class="n">4</span><b>小测</b>按知识点自动组卷</div>
+          <div class="step"><span class="n">5</span><b>报告</b>回到教师端</div>
+          <div class="step human"><span class="n">6</span><b>下节课</b>复习页自动包含高频错误</div>
+        </div>
+        <h4>考试</h4>
+        <p>题库加组卷（按等级和知识点覆盖抽题），考试模式支持计时、乱序、切屏提醒等轻量防作弊。题目由平台和教师原创，不使用 HSK 真题。</p>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ============ 3 PRONUNCIATION ============ -->
+<section class="block" id="pron">
+  <div class="eyebrow">03 · 专题</div>
+  <h2>大模型辅助中文纠音：难在哪、怎么做</h2>
+  <p class="lead">这是你们收集到的最难的问题，也是最有价值的问题。先修正两个说法，再给完整方案。</p>
+
+  <div class="grid g2" style="margin-top:12px">
+    <div class="card">
+      <h3>修正一：“市面上没有做的好的”</h3>
+      <p>中文语音评测技术已经商用多年：讯飞、腾讯云（智聆口语评测）、驰声、先声（SpeechSuper）等都提供普通话或汉语评测接口，普通话水平测试也已经在用机器评分。所以问题不是“做不出来”，而是<b>“没有做到能教”</b>：</p>
+      <ol class="small">
+        <li><b>以母语者为标准校准</b>：面对外国学习者，分数要么普遍偏低，要么只有一个总分，学生不知道怎么改。</li>
+        <li><b>缺少诊断</b>：没有告诉学生是哪个音节、哪种错误（三声发成二声、四声降不下来、送气不足、ü 发成 u）、怎么练。</li>
+        <li><b>语流变调</b>：三声变调、“一”“不”变调、轻声、儿化，很多系统只评单字。</li>
+        <li><b>母语迁移</b>：英语、日韩、泰越、阿拉伯语背景的错误模式完全不同。</li>
+        <li><b>误报伤害大</b>：读对了却被判错一次，学生对系统的信任就会明显下降。</li>
+      </ol>
+    </div>
+    <div class="card">
+      <h3>修正二：声调不是“音阶”</h3>
+      <p>汉语声调不是绝对音高（不像唱歌的 do re mi），而是<b>相对于说话人自己音域的音高走势</b>。男生的一声可能比女生的四声还低；同一个人在疲惫或激动时，整体音高也会漂移。</p>
+      <p>所以判断声调必须先做<b>说话人归一化</b>（把赫兹换算成半音，再相对于这个人自己的音域定位），然后看曲线的<b>形状</b>和<b>相对高度</b>。这也是很多“直接拿音高套规则”的方案失败的原因。</p>
+      <div class="callout blue small"><b>大模型的正确角色</b>目前通用的端到端语音大模型，在音节级的声调、声母韵母判断上还不可靠，不能让它直接当裁判。分工应该是：<b>声学模型负责测量和判定，大模型负责把结构化的诊断变成学生母语的、可执行的讲解，安排针对性练习，并记住错误历史。</b></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <h3>纠音流水线</h3>
+    <div class="legend" style="margin:6px 0"><span><i style="background:var(--jade-soft);border-color:var(--jade)"></i>确定性程序 / 声学模型</span><span><i style="background:#f6f0fc;border-color:#d9c7ef"></i>大模型</span><span><i style="background:var(--gold-soft);border-color:#f0d6a6"></i>人工参与</span></div>
+    <div class="flow">
+      <div class="step det"><span class="n">1</span><b>采集与质检</b>16kHz；静音、噪声、削波检测，不合格提示重录</div>
+      <div class="step det"><span class="n">2</span><b>期望发音</b>分词 → 拼音（多音字消歧）→ 变调规则 → 期望音素和声调序列</div>
+      <div class="step det"><span class="n">3</span><b>强制对齐</b>把录音切到音节和音素（MFA，或基于 CTC 的对齐模型）</div>
+      <div class="step det"><span class="n">4</span><b>声母韵母评测</b>GOP 分数，或在二语语料上微调的误读检测模型，输出“可能读成了什么”</div>
+      <div class="step det"><span class="n">5</span><b>声调评测</b>基频提取 → 半音与说话人归一化 → 声调分类（考虑前后音节）</div>
+      <div class="step det"><span class="n">6</span><b>诊断聚合</b>错误类型标签 + 置信度；低置信度不报错（宁漏勿误）</div>
+      <div class="step llm"><span class="n">7</span><b>讲解与练习</b>母语讲解、口型舌位图、对比听、最小对立对练习</div>
+      <div class="step human"><span class="n">8</span><b>教师复核</b>一键“判错了”，即成为标注数据</div>
+    </div>
+    <div class="grid g3" style="margin-top:6px">
+      <div><h4>声调怎么判（第 5 步细节）</h4><ul class="small">
+        <li>基频：RMVPE / CREPE（神经网络，抗噪）或 Praat（parselmouth），去除倍频和半频错误。</li>
+        <li>归一化：Hz → 半音；用该学生最近若干句话估计音域（5% 与 95% 分位），映射到五度标记 1–5。</li>
+        <li>特征：每个音节取 10 个点的归一化曲线，加斜率、拐点位置、时长和能量。</li>
+        <li>分类：小型神经网络（参数量很小，可在手机端运行），输入包含前后音节，以处理协同发音。</li>
+      </ul></div>
+      <div><h4>错误类型标签（示例）</h4><ul class="small">
+        <li>T3→T2：三声发成二声（最常见）</li>
+        <li>T4 降幅不足 / T1 偏低或下滑</li>
+        <li>T2 起点过高、上升太晚</li>
+        <li>变调未执行（如“你好”读成 nǐ hǎo 全上声）</li>
+        <li>送气不足（p/b、t/d、k/g、q/j、ch/zh、c/z）</li>
+        <li>ü→u、前后鼻音混淆、zh/z 与 sh/s 混淆、r 音</li>
+      </ul></div>
+      <div><h4>“买、建、护城河”三步走</h4><ul class="small">
+        <li><b>买</b>：接入一家商用评测接口拿到音素和声调分，先把“诊断 + 讲解 + 可视化 + 练习”这一层做出来，验证师生是否买账。</li>
+        <li><b>建</b>：自研声调模块。这部分算力需求低、差异化最大、可在端侧运行。</li>
+        <li><b>护城河</b>：在获得授权的前提下，积累“学生录音 + 教师一键标错”的二语语音标注数据，持续训练模型。公开数据可参考 iCALL、北语中介语语音语料等（使用前需核实授权）。</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <div class="callout jade" style="margin-top:14px"><b>可以先体验</b>原型的“学生 · 纠音”页面是一个浏览器内的简化版声调检测：用麦克风读“马、你好、谢谢”等，会画出你的音高曲线并与标准调型对比。没有麦克风也可以点“模拟一段学习者录音”。生产版会替换为上面的完整流水线。</div>
+</section>
+
+<!-- ============ 4 LEVELING ============ -->
+<section class="block" id="leveling">
+  <div class="eyebrow">04 · 专题</div>
+  <h2>权威分级引擎与课件流水线</h2>
+  <p class="lead">回答第 12 条“课件智能体拆分（要使用权威分级）”。分级引擎是一个确定性服务，被课件生成、资源打标、作文评估、作业组卷共同调用。</p>
+
+  <div class="grid g2" style="margin-top:12px">
+    <div class="card">
+      <h3>分级引擎：数据与判定</h3>
+      <table class="t" style="margin-top:6px">
+        <tr><th>维度</th><th>数据来源</th><th>判定方法</th></tr>
+        <tr><td>音节</td><td>等级标准音节表</td><td>拼音转换后查表</td></tr>
+        <tr><td>汉字</td><td>等级标准汉字表（含手写要求）</td><td>逐字查表</td></tr>
+        <tr><td>词汇</td><td>等级标准词汇表</td><td>以词表为用户词典分词，再查表；专名、数字单独处理</td></tr>
+        <tr><td>语法</td><td>等级标准语法点</td><td>每个语法点写成匹配模式（如“把”字句、“是……的”、结果补语），结合依存句法</td></tr>
+        <tr><td>可读性</td><td>—</td><td>句长、每百字超纲词数、生词密度</td></tr>
+      </table>
+      <p class="small muted" style="margin-top:8px">两种检查口径：<b>按等级</b>（不超过某一级）和<b>按已学集合</b>（不超过这个班到目前为止学过的内容）。后者对老师更有用。</p>
+    </div>
+    <div class="card">
+      <h3>输出示例</h3>
+<pre><code>POST /api/leveling/check
+{ "text": "我想买一件毛衣，可以便宜一点儿吗？",
+  "target": { "standard": "GF0025-2021", "maxLevel": 2 } }
+
+200 OK
+{ "estimatedLevel": 2,
+  "coverage": { "level1": 0.78, "level2": 0.22, "above": 0 },
+  "outOfLevel": [],
+  "grammar": [
+    { "id": "G2-xx", "name": "形容词 + 一点儿", "level": 2 } ],
+  "suggestions": [] }</code></pre>
+      <p class="small muted">语法点编号仅为示意，正式版按等级标准的编号体系入库。</p>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <h3>课件生成流水线（编排式工作流，不是自由对话的智能体群）</h3>
+    <div class="legend" style="margin:6px 0"><span><i style="background:var(--jade-soft);border-color:var(--jade)"></i>确定性工具</span><span><i style="background:#f6f0fc;border-color:#d9c7ef"></i>大模型节点</span><span><i style="background:var(--gold-soft);border-color:#f0d6a6"></i>教师</span></div>
+    <div class="flow">
+      <div class="step det"><span class="n">1</span><b>上下文装配</b>班级画像、教材单元知识点、已学集合、教师记忆</div>
+      <div class="step llm"><span class="n">2</span><b>教学设计</b>教学目标、课型结构、时间分配 → 课件骨架</div>
+      <div class="step llm"><span class="n">3</span><b>内容生成</b>课文、对话、例句（各部分并行）</div>
+      <div class="step det"><span class="n">4</span><b>分级审校</b>检查 → 只改超纲处 → 再检查（最多 3 轮，仍不通过则标黄给老师）</div>
+      <div class="step llm"><span class="n">5</span><b>练习与游戏</b>由生词和语法点派生</div>
+      <div class="step det"><span class="n">6</span><b>拼音与安全</b>注音、变调、多音字；内容安全与文化表述审核</div>
+      <div class="step det"><span class="n">7</span><b>渲染</b>PPTX + H5 + 学生版讲义</div>
+      <div class="step human"><span class="n">8</span><b>教师审阅</b>编辑记录进入记忆</div>
+    </div>
+    <p class="small">为什么用编排式工作流：每一步的输入输出都是结构化 JSON，可单独重试、单独评测、单独替换模型。自由协作的多智能体在演示时很炫，但在生产中难以保证稳定性和成本，也很难定位问题。</p>
+  </div>
+</section>
+
+<!-- ============ 5 PROTOTYPE ============ -->
+<section class="block" id="prototype">
+  <div class="eyebrow">05 · 界面原型</div>
+  <h2>基本操作界面（可交互）</h2>
+  <p class="lead">左侧是产品导航。<b>课件生成、分级检查、纠音、写字、课堂游戏、记忆中心</b>都可以实际操作；其余页面是静态示意。数据为演示用。</p>
+
+  <div class="proto" style="margin-top:14px">
+    <div class="proto-bar"><div class="dots"><span></span><span></span><span></span></div><div class="url" id="protoUrl">app.hanassist.cn/teacher/home</div></div>
+    <div class="proto-body">
+      <div class="proto-nav" id="protoNav">
+        <div class="who"><div class="avatar">王</div><div style="line-height:1.3"><div style="color:#fff;font-size:13.5px">王老师</div><div style="font-size:11px">某大学 · 汉语综合课</div></div></div>
+        <div class="sec">教师端</div>
+        <button data-screen="home" class="active"><span class="ico">⌂</span>工作台</button>
+        <button data-screen="gen"><span class="ico">✎</span>课件生成</button>
+        <button data-screen="lib"><span class="ico">▤</span>资源库</button>
+        <button data-screen="level"><span class="ico">≡</span>分级检查</button>
+        <button data-screen="game"><span class="ico">◎</span>课堂游戏</button>
+        <button data-screen="report"><span class="ico">◔</span>学情报告</button>
+        <button data-screen="memory"><span class="ico">✦</span>记忆中心</button>
+        <div class="sec">学生端</div>
+        <button data-screen="tone"><span class="ico">♪</span>学生 · 纠音</button>
+        <button data-screen="write"><span class="ico">字</span>学生 · 写字</button>
+      </div>
+
+      <div class="proto-main">
+
+        <!-- HOME -->
+        <div class="screen active" id="screen-home">
+          <div class="screen-title"><h3>早上好，王老师</h3><span class="chip">本周 6 节课 · 2 个班</span><div class="spacer"></div><button class="btn primary" data-goto="gen">＋ 生成新课件</button></div>
+          <div class="grid g3" style="gap:12px">
+            <div class="panel"><div class="kpi">3.5 小时</div><div class="kpi-label">本周节省的备课时间（按生成后修改时长估算）</div></div>
+            <div class="panel"><div class="kpi">87%</div><div class="kpi-label">2 班作业完成率（31 / 36）</div></div>
+            <div class="panel"><div class="kpi" style="color:var(--red)">三声 → 二声</div><div class="kpi-label">全班最高频发音错误，占声调错误的 41%</div></div>
+          </div>
+          <div class="grid g2" style="gap:12px;margin-top:12px">
+            <div class="panel">
+              <h4>今日课程</h4>
+              <div class="lesson-item"><div class="lesson-time">08:00–09:40</div><div style="flex:1"><b>初级 2 班 · 第 8 课 购物</b><div class="small muted">课件已生成 · 已修改 3 页 · 含连连看</div></div><button class="btn sm" data-goto="gen">打开</button></div>
+              <div class="lesson-item"><div class="lesson-time">14:00–15:40</div><div style="flex:1"><b>初级 3 班 · 第 5 课 问路</b><div class="small muted">尚未备课</div></div><button class="btn sm primary" data-goto="gen">一键生成</button></div>
+              <div class="lesson-item"><div class="lesson-time">19:00–20:00</div><div style="flex:1"><b>线上一对一 · Anna（德国）</b><div class="small muted">上次重点：zh / ch / sh 与声调组合</div></div><button class="btn sm">准备</button></div>
+            </div>
+            <div class="panel">
+              <h4>需要你处理</h4>
+              <div class="lesson-item"><span class="chip red">待复核</span><div style="flex:1" class="small">AI 标记了 12 段跟读录音“声调可能有误”，置信度较低，建议你听一下</div><button class="btn sm" data-goto="report">查看</button></div>
+              <div class="lesson-item"><span class="chip gold">记忆</span><div style="flex:1" class="small">系统发现你最近 3 次都把练习改成了小组活动，是否记住这个偏好？</div><button class="btn sm" data-goto="memory">去确认</button></div>
+              <div class="lesson-item"><span class="chip blue">进度</span><div style="flex:1" class="small">初级 2 班已学 312 个词，覆盖等级标准一级词汇的 62%</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- GEN -->
+        <div class="screen" id="screen-gen">
+          <div class="screen-title"><h3>课件生成</h3><span class="chip blue">分级标准：GF 0025-2021</span><div class="spacer"></div><span class="small muted" id="genMemHint">已应用 3 条记忆</span></div>
+          <div class="panel">
+            <div class="gen-form">
+              <label class="field">班级<select id="gClass"><option value="th">初级 2 班 · 泰国中学生（16 岁）</option><option value="eu" selected>初级 3 班 · 欧美成人留学生</option><option value="jk">中级 1 班 · 日韩大学生</option></select></label>
+              <label class="field">等级上限<select id="gLevel"><option value="1">初等 · 一级</option><option value="2" selected>初等 · 二级</option><option value="3">初等 · 三级</option></select></label>
+              <label class="field">话题 / 教材单元<select id="gTopic"><option value="shop">购物：在商店买衣服</option><option value="food">点餐：在饭馆点菜</option><option value="way">问路：去地铁站怎么走</option></select></label>
+              <label class="field">课型<select id="gType"><option>综合课</option><option>口语课</option><option>听说课</option></select></label>
+              <label class="field">时长<select id="gTime"><option>45 分钟</option><option selected>90 分钟</option></select></label>
+              <label class="field">内容来源<select id="gSrc"><option value="mix" selected>我的知识库 + 大模型</option><option value="kb">仅我的知识库</option><option value="llm">仅大模型</option></select></label>
+            </div>
+            <div class="row" style="margin-top:12px"><button class="btn red" id="genBtn">生成课件</button><span class="small muted">生成后可以逐页修改、局部重新生成，导出 PPTX 或用 H5 授课</span></div>
+          </div>
+          <div class="grid" style="grid-template-columns:minmax(0,280px) minmax(0,1fr);gap:12px;margin-top:12px" id="genGrid">
+            <div class="panel"><h4>生成流水线</h4><div class="pipeline" id="pipeline"></div><div id="levelReport" style="margin-top:10px"></div></div>
+            <div class="panel">
+              <div class="row" style="margin-bottom:10px"><h4 style="margin:0">课件预览</h4><div class="spacer" style="flex:1"></div>
+                <button class="btn sm" id="pyToggle" disabled>隐藏拼音</button>
+                <button class="btn sm" id="editSim" disabled>模拟：我改了练习页</button>
+                <button class="btn sm primary" id="exportBtn" disabled>导出 PPTX</button></div>
+              <div id="slides"><div class="empty">选择班级、等级和话题后点击“生成课件”。<br>生成过程会依次经过教学设计、内容生成、分级审校、拼音与安全审核、渲染。</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- LIB -->
+        <div class="screen" id="screen-lib">
+          <div class="screen-title"><h3>资源库</h3><span class="chip">按“与当前班级的匹配度”排序</span></div>
+          <div class="panel">
+            <div class="row"><input type="text" id="libQ" placeholder="搜索：话题、生词、语法点，例如“把字句”“购物”“声调”" style="flex:1;min-width:200px"><button class="btn primary" id="libGo">搜索</button></div>
+            <div class="row" style="margin-top:10px" id="libFilters">
+              <span class="small muted">来源：</span>
+              <button class="btn sm on" data-src="all">全部</button>
+              <button class="btn sm" data-src="mine">我的私有库</button>
+              <button class="btn sm" data-src="community">社区共享</button>
+              <button class="btn sm" data-src="index">公共索引</button>
+              <button class="btn sm" data-src="atom">平台原子资源</button>
+            </div>
+          </div>
+          <div class="panel" style="margin-top:12px" id="libList"></div>
+        </div>
+
+        <!-- LEVEL -->
+        <div class="screen" id="screen-level">
+          <div class="screen-title"><h3>分级检查器</h3><span class="chip gold">演示词表（约 260 词），正式版接入等级标准全量词表</span></div>
+          <div class="grid" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px" id="lvGrid">
+            <div class="panel">
+              <h4>输入文本（可直接修改）</h4>
+              <textarea id="lvIn" rows="7">A：你好！请问这件毛衣多少钱？
+B：这件三百五十块。
+A：太贵了，可以便宜一点儿吗？
+B：好吧，三百块。您要什么颜色的？
+A：我要红色的。我可以用手机支付吗？
+B：当然可以，扫这个二维码就行。</textarea>
+              <div class="row" style="margin-top:8px"><label class="field" style="flex-direction:row;align-items:center;gap:8px">等级上限<select id="lvMax"><option value="1">一级</option><option value="2" selected>二级</option><option value="3">三级</option></select></label><button class="btn primary" id="lvGo">检查</button></div>
+            </div>
+            <div class="panel">
+              <h4>结果</h4>
+              <div class="lv-legend small" style="margin-bottom:8px"><span class="lv-1">一级</span><span class="lv-2">二级</span><span class="lv-3">三级</span><span class="lv-hi">超纲</span><span class="lv-unk">词表外</span></div>
+              <div class="lv-out" id="lvOut"></div>
+              <div id="lvStat" class="small" style="margin-top:8px"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- GAME -->
+        <div class="screen" id="screen-game">
+          <div class="screen-title"><h3>课堂游戏</h3><span class="chip">内容自动取自“第 8 课 购物”词表</span><div class="spacer"></div>
+            <div class="switch" id="gameSwitch"><button class="on" data-g="match">连连看</button><button data-g="drum">击鼓传花</button></div></div>
+          <div class="game-stage" id="gameMatch">
+            <div class="row" style="margin-bottom:12px"><b style="font-size:16px">连连看：汉字 ↔ 拼音</b><div style="flex:1"></div>
+              <div class="switch" id="matchMode"><button class="on" data-m="py">拼音</button><button data-m="en">英文</button></div>
+              <span id="matchInfo" class="small">用时 0 秒 · 已配对 0 / 6</span><button class="btn sm" id="matchReset">重新开始</button></div>
+            <div class="game-board" id="matchBoard"></div>
+          </div>
+          <div class="game-stage" id="gameDrum" style="display:none">
+            <div class="row" style="margin-bottom:12px"><b style="font-size:16px">击鼓传花：随机点名 + 随机题目</b><div style="flex:1"></div><button class="btn sm red" id="drumGo">开始击鼓</button></div>
+            <div class="drum-names" id="drumNames"></div>
+            <div id="drumQ" style="margin-top:16px;font-size:18px;min-height:60px"></div>
+          </div>
+          <p class="small muted" style="margin-top:10px">其他玩法（P1）：钓鱼、拼音转盘、听音找字、句子排序、你比划我猜；学生可用手机扫码加入实时抢答。</p>
+        </div>
+
+        <!-- REPORT -->
+        <div class="screen" id="screen-report">
+          <div class="screen-title"><h3>学情报告 · 初级 2 班</h3><span class="chip gold">AI 评估为参考，教师可修改</span><div class="spacer"></div><select id="repStu"><option value="class">全班平均</option><option value="s1">Somchai</option><option value="s2">Ploy</option><option value="s3">Nattapong</option></select></div>
+          <div class="grid" style="grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:12px" id="repGrid">
+            <div class="panel"><h4>五项能力（等级估计）</h4><svg class="radar" id="radar" viewBox="0 0 300 260"></svg><p class="small muted" id="repLevel"></p></div>
+            <div class="stack">
+              <div class="panel"><h4>高频发音错误（第 7–8 课作业）</h4><div id="repErr"></div></div>
+              <div class="panel"><h4>汉字书写</h4><div class="small">笔顺错误最多：<b class="tone-big" style="font-size:20px">爱</b>（第 6 笔起错 38%）、<b style="font-size:20px;font-family:var(--serif)">我</b>（第 5、6 笔顺序颠倒 31%）、<b style="font-size:20px;font-family:var(--serif)">国</b>（先封口 22%）</div><p class="small muted">已自动加入下节课“复习”页，并为错误率高的学生推送描红作业。</p></div>
+              <div class="panel"><h4>AI 生成的评语（可编辑）</h4><textarea rows="3" id="repComment"></textarea></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MEMORY -->
+        <div class="screen" id="screen-memory">
+          <div class="screen-title"><h3>记忆中心</h3><span class="chip">系统记住的关于你和你班级的事情，每一条都可以修改或删除</span></div>
+          <div class="panel" id="memList"></div>
+          <p class="small muted" style="margin-top:8px">记忆只用于为你生成内容。平台层的改进只使用去标识化的聚合数据，可以在设置中关闭。</p>
+        </div>
+
+        <!-- TONE -->
+        <div class="screen" id="screen-tone">
+          <div class="screen-title"><h3>跟读纠音</h3><span class="chip gold">浏览器内简化演示</span><div class="spacer"></div><span class="small muted" id="calibInfo">音域校准：尚未采集</span></div>
+          <div class="panel">
+            <div class="row" style="align-items:flex-start;gap:16px">
+              <div style="flex:1;min-width:240px">
+                <div class="small muted">选择要读的内容</div>
+                <div class="tone-targets" id="toneTargets" style="margin-top:6px"></div>
+                <div style="margin-top:14px" class="row"><div class="tone-big" id="toneHz">马</div><div><div id="tonePy" style="font-size:18px"></div><div class="small muted" id="toneNote"></div></div></div>
+              </div>
+              <div class="row" style="gap:12px">
+                <button class="rec-btn" id="recBtn">按下<br>录音</button>
+                <div class="stack" style="gap:6px"><button class="btn sm" id="playStd">▶ 听标准音</button><button class="btn sm" id="playMine" disabled>▶ 听我的录音</button><button class="btn sm" id="simBtn">模拟一段学习者录音</button></div>
+              </div>
+            </div>
+            <div id="toneMsg" class="small muted" style="margin-top:8px">点击录音后读出上面的字词，系统会自动在约 2 秒后停止。请在安静环境中使用，并允许浏览器使用麦克风。</div>
+          </div>
+          <div class="panel" style="margin-top:12px">
+            <div class="row" style="margin-bottom:6px"><h4 style="margin:0">音高曲线（五度标记）</h4><div class="spacer" style="flex:1"></div><span class="small"><span style="display:inline-block;width:18px;border-top:2px dashed #9aa0ad;vertical-align:middle"></span> 标准调型　<span style="display:inline-block;width:18px;border-top:3px solid var(--red);vertical-align:middle"></span> 你的发音</span></div>
+            <svg class="tone-svg" id="toneSvg" viewBox="0 0 640 230"></svg>
+            <div class="row" id="toneCards" style="margin-top:10px;align-items:stretch"></div>
+          </div>
+        </div>
+
+        <!-- WRITE -->
+        <div class="screen" id="screen-write">
+          <div class="screen-title"><h3>汉字书写</h3><span class="chip">规范笔顺 · 逐笔判定</span><div class="spacer"></div>
+            <div class="switch" id="handSwitch"><button class="on" data-h="right">右手模式</button><button data-h="left">左手模式</button></div></div>
+          <div class="panel">
+            <div class="hz-wrap" id="hzWrap">
+              <div class="hz-board" id="hzBoard"></div>
+              <div class="hz-side">
+                <div class="hz-chars" id="hzChars"></div>
+                <div class="row"><button class="btn primary" id="hzAnim">▶ 笔顺动画</button><button class="btn red" id="hzQuiz">✎ 开始描写</button><button class="btn" id="hzOutline">隐藏轮廓（默写）</button></div>
+                <div class="hz-feedback" id="hzFb">选一个字，先看笔顺动画，再点“开始描写”在左侧格子里按笔顺书写。</div>
+                <div><div class="small muted" style="margin-bottom:4px">笔顺分解 <span id="hzCount"></span></div><div class="hz-steps" id="hzSteps"></div></div>
+                <div class="small muted" id="hzHandTip"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 6 JOURNEY ============ -->
+<section class="block" id="journey">
+  <div class="eyebrow">06 · 端到端串联</div>
+  <h2>一周的完整闭环：从备课到下一次备课</h2>
+  <p class="lead">以“王老师，初级 2 班，36 名泰国中学生，二级水平，第 8 课 购物”为例。横向是时间，纵向是角色。</p>
+  <div class="table-wrap card" style="padding:14px;margin-top:12px">
+    <div class="journey">
+      <div></div>
+      <div class="col-head">① 周一 · 备课</div><div class="col-head">② 周一 · 审阅</div><div class="col-head">③ 周二 · 上课</div><div class="col-head">④ 周二 · 布置作业</div><div class="col-head">⑤ 周二至周四 · 学生练习</div><div class="col-head">⑥ 周五 · 学情</div><div class="col-head">⑦ 下周一 · 再备课</div>
+
+      <div class="lane-name">教师</div>
+      <div class="cell t">选择“第 8 课 购物”，点“一键生成”</div>
+      <div class="cell t">逐页预览，把练习页改成小组活动，确认“记住偏好”</div>
+      <div class="cell t">PPTX 授课；扫码打开连连看和击鼓传花</div>
+      <div class="cell t">一键布置：跟读 10 句、写 5 个字、复习卡片</div>
+      <div class="cell empty"></div>
+      <div class="cell t">看报告，复核 12 段低置信度录音，修改评语</div>
+      <div class="cell t">打开第 9 课，复习页已自动包含上周弱项</div>
+
+      <div class="lane-name">AI 编排</div>
+      <div class="cell a">装配上下文：班级画像、已学 312 词、3 条记忆 → 教学设计 → 内容生成</div>
+      <div class="cell a">从编辑差异中抽取偏好候选，提示确认</div>
+      <div class="cell a">游戏内容从本课词表派生</div>
+      <div class="cell a">作业由课件知识点派生，难度按个人水平微调</div>
+      <div class="cell a">讲解生成：用泰语解释三声，安排对比练习</div>
+      <div class="cell a">汇总评语草稿；按错误类型聚类</div>
+      <div class="cell a">把高频错误写入情节记忆，影响新课件</div>
+
+      <div class="lane-name">确定性引擎</div>
+      <div class="cell d">分级审校：零超纲；拼音、变调、多音字</div>
+      <div class="cell empty"></div>
+      <div class="cell empty"></div>
+      <div class="cell d">渲染学生版讲义和 H5 作业</div>
+      <div class="cell d">声调测量与判定；笔顺逐笔判定；FSRS 排期</div>
+      <div class="cell d">统计：三声→二声占 41%，“爱”笔顺错 38%</div>
+      <div class="cell empty"></div>
+
+      <div class="lane-name">学生</div>
+      <div class="cell empty"></div>
+      <div class="cell empty"></div>
+      <div class="cell s">课堂游戏，抢答</div>
+      <div class="cell s">微信 / 浏览器打开作业，不用下载 App</div>
+      <div class="cell s">跟读看到自己的音高曲线；描红；每天 5 分钟复习</div>
+      <div class="cell s">收到个人小结和下周练习建议</div>
+      <div class="cell empty"></div>
+    </div>
+  </div>
+  <div class="legend" style="margin-top:8px"><span><i style="background:#fff;border-left:3px solid var(--red)"></i>教师操作</span><span><i style="background:#fff;border-left:3px solid var(--violet)"></i>大模型 / 编排</span><span><i style="background:#fff;border-left:3px solid var(--gold)"></i>确定性引擎</span><span><i style="background:#fff;border-left:3px solid var(--jade)"></i>学生</span></div>
+</section>
+
+<!-- ============ 7 ARCH ============ -->
+<section class="block" id="arch">
+  <div class="eyebrow">07 · 技术架构</div>
+  <h2>分层架构与技术选型</h2>
+  <p class="lead">原则：业务服务用团队最熟的技术栈（例如 Java / Spring Boot）；AI、语音、文档处理用 Python 生态；确定性引擎独立成服务，可被所有场景复用。</p>
+
+  <div class="card" style="margin-top:12px">
+    <div class="arch">
+      <div class="layer"><div class="layer-name">终端<small>Web / 小程序 / 大屏</small></div><div class="layer-boxes">
+        <div class="box"><b>教师工作台</b>Web（React + TypeScript），PC 优先</div>
+        <div class="box"><b>课堂大屏</b>H5 授课与游戏，适配智慧黑板</div>
+        <div class="box"><b>学生端</b>国内：微信小程序；海外：PWA，后续原生 App</div>
+        <div class="box"><b>管理后台</b>机构管理、教研审核、内容运营</div>
+      </div></div>
+      <div class="layer"><div class="layer-name">接入层<small>网关</small></div><div class="layer-boxes">
+        <div class="box"><b>API 网关</b>鉴权、限流、多租户、国内与海外分区路由</div>
+        <div class="box"><b>实时通道</b>WebSocket：课堂抢答、生成进度推送</div>
+      </div></div>
+      <div class="layer"><div class="layer-name">业务服务<small>Java / Spring Boot</small></div><div class="layer-boxes">
+        <div class="box"><b>用户与机构</b>教师、学生、班级、角色</div>
+        <div class="box"><b>教材与进度</b>教材、单元、知识点、已学集合</div>
+        <div class="box"><b>资源库</b>上传、授权、审核、检索</div>
+        <div class="box"><b>作业与测评</b>布置、提交、组卷、成绩</div>
+        <div class="box"><b>订阅与计费</b>套餐、额度、发票</div>
+      </div></div>
+      <div class="layer"><div class="layer-name">AI 编排层<small>Python / FastAPI</small></div><div class="layer-boxes">
+        <div class="box hl"><b>工作流引擎</b>课件、作业、报告流水线（自研轻量 DAG 或 LangGraph）</div>
+        <div class="box"><b>记忆服务</b>档案 / 情节 / 偏好记忆，提取与召回</div>
+        <div class="box"><b>检索服务</b>混合检索 + 重排</div>
+        <div class="box"><b>模型网关</b>多模型路由、计费、日志、降级、内容安全</div>
+      </div></div>
+      <div class="layer"><div class="layer-name">专项引擎<small>确定性 / 专用模型</small></div><div class="layer-boxes">
+        <div class="box hl2"><b>分级引擎</b>分词、查表、语法点匹配、可读性</div>
+        <div class="box hl2"><b>语音评测引擎</b>对齐、GOP、基频与声调分类；初期接商用接口</div>
+        <div class="box hl2"><b>汉字引擎</b>笔顺数据、描红判定、部件、书写评分</div>
+        <div class="box hl2"><b>拼音引擎</b>多音字消歧、变调、轻声、儿化</div>
+        <div class="box"><b>渲染服务</b>PPTX、H5、PDF 讲义；LibreOffice 预览</div>
+        <div class="box"><b>TTS / ASR</b>CosyVoice、FunASR（Paraformer / SenseVoice）或云服务</div>
+      </div></div>
+      <div class="layer"><div class="layer-name">数据层</div><div class="layer-boxes">
+        <div class="box"><b>PostgreSQL</b>业务数据 + JSONB + pgvector</div>
+        <div class="box"><b>Redis</b>缓存、会话、队列</div>
+        <div class="box"><b>对象存储</b>课件、音频、图片（OSS / S3）</div>
+        <div class="box"><b>检索</b>OpenSearch（P1，资源量大后）</div>
+        <div class="box"><b>分析</b>ClickHouse 行为数据（P1）</div>
+      </div></div>
+      <div class="layer"><div class="layer-name">平台能力</div><div class="layer-boxes">
+        <div class="box"><b>评测平台</b>离线评测集：课件质量、超纲率、声调一致率</div>
+        <div class="box"><b>标注平台</b>教师一键标错、教研审核</div>
+        <div class="box"><b>可观测性</b>日志、链路追踪、模型调用成本</div>
+        <div class="box"><b>部署</b>国内云 + 海外节点；私有化用 Docker / K8s</div>
+      </div></div>
+    </div>
+  </div>
+
+  <div class="grid g2" style="margin-top:16px">
+    <div class="card">
+      <h3>关键开源与第三方组件</h3>
+      <table class="t" style="margin-top:6px">
+        <tr><th>用途</th><th>候选</th><th>注意事项</th></tr>
+        <tr><td>笔顺数据</td><td>Make Me a Hanzi、Hanzi Writer</td><td>数据协议为 Arphic Public License；需按国家规范校对</td></tr>
+        <tr><td>分词</td><td>jieba、HanLP、pkuseg</td><td>加载等级词表作为用户词典</td></tr>
+        <tr><td>拼音</td><td>pypinyin</td><td>变调和多音字需要自研规则与词典补充</td></tr>
+        <tr><td>基频</td><td>RMVPE、CREPE、parselmouth（Praat）</td><td>注意倍频错误，需后处理</td></tr>
+        <tr><td>强制对齐</td><td>Montreal Forced Aligner</td><td>有普通话模型；二语语音需调参</td></tr>
+        <tr><td>ASR / TTS</td><td>FunASR、CosyVoice 或云服务</td><td>TTS 需要“慢速、清晰”的教学音色</td></tr>
+        <tr><td>评测接口</td><td>讯飞、腾讯云智聆、驰声、SpeechSuper</td><td>先用其中一家，抽象成接口便于替换</td></tr>
+        <tr><td>PPTX</td><td>python-pptx、PptxGenJS</td><td>只用基础元素，保证 WPS 和 Keynote 兼容</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h3>非功能性要求</h3>
+      <ul class="small">
+        <li><b>生成时延</b>：45 分钟课件的首屏骨架在 10 秒内出现，完整生成在 90 秒内完成，期间流式展示进度。</li>
+        <li><b>纠音时延</b>：单句评测在 1.5 秒内返回；声调可视化在端侧实时绘制。</li>
+        <li><b>成本</b>：单份课件的模型成本控制在可承受范围（便宜模型做打标和分类，强模型只用于内容生成）；按教师月度生成次数设置额度。</li>
+        <li><b>可用性</b>：模型供应商故障时自动切换；生成失败不丢失教师已编辑内容。</li>
+        <li><b>离线</b>：导出的 PPTX 和讲义完全离线可用；学生端缓存当天作业。</li>
+        <li><b>多语言</b>：学生端界面和讲解支持英语、泰语、韩语、日语、越南语、俄语、阿拉伯语等（按市场优先级）。</li>
+        <li><b>数据分区</b>：国内用户数据存境内；海外机构可选当地区域部署。</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 8 DATA ============ -->
+<section class="block" id="data">
+  <div class="eyebrow">08 · 数据、接口与模型策略</div>
+  <h2>核心数据模型与接口</h2>
+  <div class="grid g2" style="margin-top:12px">
+    <div class="card">
+      <h3>核心实体</h3>
+<pre><code>Teacher ─┬─ Class ── Student (l1, age, hand: left|right)
+         │     └── Progress (textbook_unit, learned_set)
+         ├── Memory (type: profile|episodic|preference,
+         │           content, source, confidence, status)
+         ├── Resource (tags, level_dist, license, visibility)
+         └── Lesson (lesson_json, version, edits[])
+
+Textbook ── Unit ── KnowledgePoint (word|char|grammar|topic, level)
+Standard ── Item (syllable|char|word|grammar, level, code)
+
+Assignment ── Task (read_aloud|write_char|srs|quiz)
+Attempt (audio_url, strokes, scores_json, ai_conf, teacher_override)</code></pre>
+    </div>
+    <div class="card">
+      <h3>课件中间表示（Lesson JSON，节选）</h3>
+<pre><code>{ "meta": { "level": 2, "topic": "购物", "minutes": 90,
+            "class": "c_0231", "memories": ["m_12","m_31"] },
+  "sections": [
+    { "type": "vocab", "items": [
+      { "hz": "便宜", "py": "piányi", "pos": "adj",
+        "en": "cheap", "level": 2,
+        "example": "可以便宜一点儿吗？" } ] },
+    { "type": "dialogue", "lines": [
+      { "role": "A", "hz": "这件毛衣多少钱？" } ] },
+    { "type": "grammar", "point": "G2-形容词+一点儿" },
+    { "type": "exercise", "kind": "group_roleplay" },
+    { "type": "game", "kind": "match", "source": "vocab" } ],
+  "checks": { "outOfLevel": 0, "safety": "pass" } }</code></pre>
+    </div>
+  </div>
+  <div class="grid g2" style="margin-top:16px">
+    <div class="card">
+      <h3>纠音接口返回（示例）</h3>
+<pre><code>POST /api/speech/assess   (audio + "你好")
+{ "expected": [ {"hz":"你","py":"ní","tone":2,"sandhi":"3→2"},
+                {"hz":"好","py":"hǎo","tone":3} ],
+  "syllables": [
+    { "hz":"你", "detectedTone":3, "toneScore":0.42,
+      "error":"SANDHI_NOT_APPLIED", "confidence":0.81,
+      "f0":[2.1,1.6,1.3,1.5,2.0,...] },
+    { "hz":"好", "detectedTone":3, "toneScore":0.88,
+      "initial":{"expected":"h","score":0.93},
+      "final":{"expected":"ao","score":0.9} } ],
+  "feedback": { "lang":"th", "text":"...", "drills":["ní hǎo","hěn hǎo"] } }</code></pre>
+    </div>
+    <div class="card">
+      <h3>模型使用策略</h3>
+      <table class="t" style="margin-top:6px">
+        <tr><th>任务</th><th>模型</th><th>理由</th></tr>
+        <tr><td>教学设计、课文生成</td><td>强模型</td><td>质量决定第一印象</td></tr>
+        <tr><td>超纲改写、练习派生</td><td>中等模型</td><td>任务明确、量大</td></tr>
+        <tr><td>打标、分类、偏好抽取</td><td>小模型 / 便宜模型</td><td>高频、低成本</td></tr>
+        <tr><td>分级、拼音、笔顺</td><td>不用大模型</td><td>确定性程序更准、更便宜</td></tr>
+        <tr><td>声调与音素判定</td><td>专用声学模型</td><td>大模型在这一层不可靠</td></tr>
+        <tr><td>纠音讲解</td><td>中等模型 + 教学法知识库</td><td>需要多语言、口语化</td></tr>
+      </table>
+      <p class="small muted" style="margin-top:8px">所有提示词和模板进入版本管理；每次变更在评测集上跑回归，指标不退化才上线。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 9 ROADMAP ============ -->
+<section class="block" id="roadmap">
+  <div class="eyebrow">09 · 路线</div>
+  <h2>POC → MVP 上市 → 扩展</h2>
+  <p class="lead">按阶段的范围和“进入下一阶段的条件”来规划，而不是按日期。每个阶段都要有真实的老师和真实的班级参与。</p>
+  <div class="grid g3" style="margin-top:12px">
+    <div class="card">
+      <span class="chip red">阶段 0 · POC</span>
+      <h3 style="margin-top:8px">验证“备课省时 + 纠音可信”</h3>
+      <h4>范围</h4>
+      <ul class="small">
+        <li>分级引擎：等级标准一至三级全量数据入库</li>
+        <li>课件生成：1 套主流教材的初级单元，导出 PPTX</li>
+        <li>汉字：笔顺演示与描红（含左手模式），常用 1000 字校对</li>
+        <li>纠音：单字和双字词，商用接口 + 自研声调可视化与诊断</li>
+        <li>游戏：连连看 1 款</li>
+        <li>记忆：档案记忆 + 偏好确认</li>
+      </ul>
+      <h4>参与者</h4><p class="small">5–10 位种子教师，2–3 个真实班级。</p>
+      <h4>进入下一阶段的条件</h4><p class="small">达到第 0 节的六项指标中的至少四项，且声调误报率达标。</p>
+    </div>
+    <div class="card">
+      <span class="chip gold">阶段 1 · MVP 上市</span>
+      <h3 style="margin-top:8px">形成完整闭环并开始收费</h3>
+      <h4>范围</h4>
+      <ul class="small">
+        <li>资源库：私有库 + 社区共享 + 平台原子资源</li>
+        <li>作业闭环：跟读、写字、FSRS 复习、小测</li>
+        <li>学情报告与评语</li>
+        <li>游戏 3–5 款，手机扫码实时抢答</li>
+        <li>学生端：小程序 / PWA，界面多语言</li>
+        <li>测评中心：听读自适应测试（形成性）</li>
+        <li>付费：教师个人订阅、机构试用</li>
+      </ul>
+      <h4>进入下一阶段的条件</h4><p class="small">付费教师的月留存稳定；至少 3 家机构愿意签年度合同。</p>
+    </div>
+    <div class="card">
+      <span class="chip blue">阶段 2 · 扩展</span>
+      <h3 style="margin-top:8px">机构化、职业化、模型自研</h3>
+      <h4>范围</h4>
+      <ul class="small">
+        <li>职业汉语行业包（1–2 个行业起步）</li>
+        <li>自研发音模型，用积累的标注数据替换商用接口</li>
+        <li>LoRA 微调课件生成模型，降低成本</li>
+        <li>机构版：教研审核、统一资源库、数据看板</li>
+        <li>私有化部署、海外区域部署</li>
+        <li>纸笔拍照书写评测；出版社资源合作</li>
+      </ul>
+    </div>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <h3>POC 团队配置（角色而非人数上限）</h3>
+    <div class="grid g4" style="gap:12px;margin-top:6px">
+      <div><b>产品负责人</b><p class="small muted">最好有国际中文教学经历，负责种子教师访谈与验收。</p></div>
+      <div><b>教研（2 人）</b><p class="small muted">国际中文教育背景；把等级标准数据化、校对笔顺、审核生成质量、建评测集。</p></div>
+      <div><b>工程（4 人）</b><p class="small muted">前端 2（工作台 + 学生端），后端 1（业务服务），AI 应用 1（编排、检索、记忆）。</p></div>
+      <div><b>语音算法（1 人）</b><p class="small muted">对齐、基频、声调分类；对接商用评测接口。</p></div>
+    </div>
+    <p class="small" style="margin-top:8px"><b>最大的技术不确定性</b>在声调判定的误报率，以及等级标准语法点的规则覆盖度。建议这两项最先启动，其余功能可以并行推进。</p>
+  </div>
+</section>
+
+<!-- ============ 10 BIZ ============ -->
+<section class="block" id="biz">
+  <div class="eyebrow">10 · 商业化</div>
+  <h2>谁付钱、怎么获客、和谁竞争</h2>
+  <div class="grid g3" style="margin-top:12px">
+    <div class="card"><h3>教师个人版</h3><p class="small">免费额度：每月若干份课件、分级检查不限次、笔顺工具免费。</p><p class="small">专业版：按月或按年订阅，解锁无限生成、纠音作业、学情报告、记忆中心。</p><p class="small muted">价格在访谈中验证，建议参考教师对现有 AI PPT 工具的付费水平。</p></div>
+    <div class="card"><h3>机构版</h3><p class="small">中文学校、孔院、国际学校、高校国际教育学院：按教师席位加学生数收费，含机构资源库、教研审核流、数据看板、发票与合同。</p><p class="small muted">机构是收入主体，个人版是获客渠道。</p></div>
+    <div class="card"><h3>职业汉语与定制</h3><p class="small">职业院校、出海企业：行业包定制加平台授权，项目制收费；可提供私有化部署。</p><p class="small muted">客单价高，但需要行业专家资源，适合第二阶段。</p></div>
+  </div>
+  <div class="grid g2" style="margin-top:16px">
+    <div class="card">
+      <h3>获客渠道</h3>
+      <ul class="small">
+        <li><b>免费工具引流</b>：分级检查器、笔顺描红、拼音注音工具单独开放，不需要注册即可使用，是最好的“钩子”。</li>
+        <li><b>教师社群</b>：国际中文教师微信群、海外中文教师协会、志愿者教师培训。</li>
+        <li><b>汉语国际教育专业硕士（MTCSOL）</b>：未来的教师，实习期就开始用，毕业后带到工作岗位。</li>
+        <li><b>机构合作</b>：与培训机构、出版社、智慧黑板厂商合作预装或联合推广。</li>
+        <li><b>内容营销</b>：每周发布“同一课的三种分级版本”“常见声调错误”等内容。</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>竞争格局</h3>
+      <table class="t" style="margin-top:6px">
+        <tr><th>类型</th><th>代表</th><th>我们的差异</th></tr>
+        <tr><td>学生端学习 App</td><td>HelloChinese、SuperChinese、Duolingo、Du Chinese</td><td>面向自学，不服务教师课堂</td></tr>
+        <tr><td>汉字与词典工具</td><td>Pleco、Skritter</td><td>工具强，但没有课堂闭环和分级</td></tr>
+        <tr><td>通用 AI 课件</td><td>各类 AI PPT 工具、办公套件 AI</td><td>没有分级、拼音声调排版和汉语游戏</td></tr>
+        <tr><td>官方平台</td><td>国际中文智慧教育平台等</td><td>资源权威但工具化弱，是合作对象而非对手</td></tr>
+        <tr><td>语音评测接口</td><td>讯飞、腾讯云、驰声、先声</td><td>是我们的供应商，不是直接竞争者</td></tr>
+      </table>
+      <p class="small" style="margin-top:8px"><b>护城河</b>：分级引擎和校对过的标准数据、教师行为数据形成的记忆、二语语音标注数据、汉字能力。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 11 RISKS ============ -->
+<section class="block" id="risks">
+  <div class="eyebrow">11 · 风险与合规</div>
+  <h2>风险、合规与“我们不做什么”</h2>
+  <div class="grid g2" style="margin-top:12px">
+    <div class="card">
+      <h3>合规清单</h3>
+      <table class="t" style="margin-top:6px">
+        <tr><th>事项</th><th>要求与做法</th></tr>
+        <tr><td>生成式 AI 服务</td><td>面向境内公众提供生成式 AI 服务，需按《生成式人工智能服务管理暂行办法》履行相应的安全评估和备案程序。POC 使用已备案模型的接口，上线前确认应用侧的登记或备案要求。</td></tr>
+        <tr><td>内容安全</td><td>教学内容涉及国情、地图、宗教、民族等表述，必须经过内容审核，海外场景尤其重要；文化内容可参考《国际中文教育用中国文化和国情教学参考框架》。</td></tr>
+        <tr><td>个人信息</td><td>学生录音属于个人信息，用于模型训练需单独告知并取得同意，可随时撤回；声纹相关数据按敏感个人信息处理。</td></tr>
+        <tr><td>未成年人</td><td>少儿用户需监护人同意，默认不开放社交功能。</td></tr>
+        <tr><td>海外数据</td><td>欧盟学生适用 GDPR 等当地法规；提供区域部署和数据导出、删除能力。</td></tr>
+        <tr><td>版权</td><td>教材课文、HSK 真题、出版社课件不得转存；只做知识点结构化、链接索引和授权合作。</td></tr>
+      </table>
+    </div>
+    <div class="stack">
+      <div class="card">
+        <h3>主要风险与对策</h3>
+        <ul class="small">
+          <li><b>纠音误报伤害信任</b> → 宁漏勿误；低置信度只提示“可以再听一遍”，不判错；教师可一键推翻。</li>
+          <li><b>生成内容质量不稳定</b> → 结构化输出、分级审校、评测集回归；教师总是最后一道确认。</li>
+          <li><b>功能做得太厚</b> → 严格按阶段范围；每个新功能都必须挂在主闭环上。</li>
+          <li><b>老师不愿改变习惯</b> → 输出标准 PPTX，融入老师现有工作流，而不是要求老师换平台。</li>
+          <li><b>模型成本失控</b> → 模型分层路由、缓存、按套餐设置额度。</li>
+          <li><b>标准数据版本变化</b> → 标准数据带版本号，课件记录所用版本，可批量重检。</li>
+        </ul>
+      </div>
+      <div class="card" style="background:#1d2433;color:#eae6de;border-color:#1d2433">
+        <h3 style="color:#fff">我们明确不做</h3>
+        <ul class="small">
+          <li>不从零训练大模型，第一阶段也不微调</li>
+          <li>不宣称 AI 评级等同于 HSK 等级</li>
+          <li>不搬运他人课件、教材课文和考试真题</li>
+          <li>不自己编一整套教材</li>
+          <li>不在 PPT 里做复杂游戏</li>
+          <li>不让大模型直接判定声调和笔顺对错</li>
+          <li>不在第一阶段做学生自学型的聊天智能体</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 12 APPENDIX ============ -->
+<section class="block" id="appendix">
+  <div class="eyebrow">12 · 附录</div>
+  <h2>标准、数据源与术语</h2>
+  <div class="grid g2" style="margin-top:12px">
+    <div class="card">
+      <h3>标准与数据源（使用前需核实版本与授权）</h3>
+      <table class="t" style="margin-top:6px">
+        <tr><th>名称</th><th>用途</th></tr>
+        <tr><td>《国际中文教育中文水平等级标准》GF 0025-2021</td><td>分级主轴：三等九级，音节、汉字、词汇、语法</td></tr>
+        <tr><td>《通用规范汉字笔顺规范》GF 0023-2020</td><td>笔顺校对基准</td></tr>
+        <tr><td>《现代常用字部件及部件名称规范》</td><td>部件拆解与命名</td></tr>
+        <tr><td>HSK / HSKK / YCT / BCT 考试大纲</td><td>考试映射与题型参考（不使用真题）</td></tr>
+        <tr><td>《国际中文教育用中国文化和国情教学参考框架》</td><td>文化内容参考</td></tr>
+        <tr><td>Make Me a Hanzi / Hanzi Writer</td><td>笔画轮廓与描红判定</td></tr>
+        <tr><td>iCALL 语料、北语中介语语音语料等</td><td>二语语音研究与评测参考</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h3>术语</h3>
+      <table class="t" style="margin-top:6px">
+        <tr><th>术语</th><th>含义</th></tr>
+        <tr><td>五度标记</td><td>把说话人音域分成 1–5 五度描述声调：一声 55、二声 35、三声 214（语流中常为半三声 21）、四声 51</td></tr>
+        <tr><td>变调</td><td>三声加三声时前一个读二声；“一”“不”在四声前读二声等</td></tr>
+        <tr><td>GOP</td><td>Goodness of Pronunciation，音素发音质量分</td></tr>
+        <tr><td>强制对齐</td><td>已知文本时，把录音切分到每个音节和音素的时间位置</td></tr>
+        <tr><td>FSRS</td><td>一种开源的间隔重复调度算法，用于安排复习时间</td></tr>
+        <tr><td>IRT / CAT</td><td>项目反应理论 / 计算机自适应测试，用较少题目估计能力</td></tr>
+        <tr><td>形成性评价</td><td>学习过程中的诊断性评价，区别于终结性的高利害考试</td></tr>
+        <tr><td>已学集合</td><td>某个班级截至当前进度学过的全部词、字和语法点</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="foot">
+    本文档为产品与技术方案（v0.1），原型中的数据均为演示数据。笔顺演示使用 Hanzi Writer（MIT 协议），笔画数据来自 Make Me a Hanzi（Arphic Public License）。纠音演示为浏览器内简化算法，仅用于说明交互形态，不代表生产版精度。
+  </div>
+</section>
+
+</main>
+
+<div class="slide-zoom" id="slideZoom"></div>
+<div class="toast" id="toast"></div>
